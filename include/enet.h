@@ -617,14 +617,14 @@ extern "C" {
      *    ENET_PACKET_FLAG_SENT - whether the packet has been sent from all queues it has been entered into
      * @sa ENetPacketFlag
      */
-    typedef struct _ENetPacket {
+    struct _ENetPacket {
         size_t                 referenceCount; /**< internal use only */
         enet_uint32            flags;          /**< bitwise-or of ENetPacketFlag constants */
         enet_uint8 *           data;           /**< allocated data for packet */
         size_t                 dataLength;     /**< length of data */
         ENetPacketFreeCallback freeCallback;   /**< function to be called when the packet is no longer in use */
         void *                 userData;       /**< application private data, may be freely modified */
-    } ENetPacket;
+    };
 
     typedef struct _ENetAcknowledgement {
         ENetListNode acknowledgementList;
@@ -5199,12 +5199,13 @@ extern "C" {
             // Set the value of the start_time_ns, such that the first timestamp
             // is at 1ms. This ensures 0 remains a special value.
             uint64_t want_value = current_time_ns - 1 * ns_in_ms;
-            #if defined(__GNUC__) // Ignore warning.
+            // In-function diagnostic pragmas and -Wpedantic need gcc >= 4.8.
+            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))) // Ignore warning.
             #pragma GCC diagnostic push
             #pragma GCC diagnostic ignored "-Wpedantic"
             #endif
             uint64_t old_value = ENET_ATOMIC_CAS(&start_time_ns, 0, want_value);
-            #if defined(__GNUC__)
+            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))
             #pragma GCC diagnostic pop
             #endif
             offset_ns = old_value == 0 ? want_value : old_value;
