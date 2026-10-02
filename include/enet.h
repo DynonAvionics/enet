@@ -5199,13 +5199,13 @@ extern "C" {
             // Set the value of the start_time_ns, such that the first timestamp
             // is at 1ms. This ensures 0 remains a special value.
             uint64_t want_value = current_time_ns - 1 * ns_in_ms;
-            // In-function diagnostic pragmas and -Wpedantic need gcc >= 4.6.
-            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))) // Ignore warning.
+            // In-function diagnostic pragmas and -Wpedantic need gcc >= 4.8.
+            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))) // Ignore warning.
             #pragma GCC diagnostic push
             #pragma GCC diagnostic ignored "-Wpedantic"
             #endif
             uint64_t old_value = ENET_ATOMIC_CAS(&start_time_ns, 0, want_value);
-            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
+            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))
             #pragma GCC diagnostic pop
             #endif
             offset_ns = old_value == 0 ? want_value : old_value;
