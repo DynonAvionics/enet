@@ -543,7 +543,7 @@ extern "C" {
 #ifndef ENET_IPV4_ONLY
         ENET_SOCKOPT_IPV6_V6ONLY = 10,
 #endif
-        ENET_SOCKOPT_TTL       = 11,
+        ENET_SOCKOPT_TTL       = 11
     } ENetSocketOption;
 
     typedef enum _ENetSocketShutdown {
@@ -596,7 +596,7 @@ extern "C" {
         ENET_PACKET_FLAG_NO_ALLOCATE         = (1 << 2), /** packet will not allocate data, and user must supply it instead */
         ENET_PACKET_FLAG_UNRELIABLE_FRAGMENT = (1 << 3), /** packet will be fragmented using unreliable (instead of reliable) sends if it exceeds the MTU */
         ENET_PACKET_FLAG_UNTHROTTLED         = (1 << 4), /** packet that was enqueued for sending unreliably should not be dropped due to throttling and sent if possible */
-        ENET_PACKET_FLAG_SENT                = (1 << 8), /** whether the packet has been sent from all queues it has been entered into */
+        ENET_PACKET_FLAG_SENT                = (1 << 8)  /** whether the packet has been sent from all queues it has been entered into */
     } ENetPacketFlag;
 
     typedef void (ENET_CALLBACK *ENetPacketFreeCallback)(void *);
@@ -896,7 +896,7 @@ extern "C" {
          * packet within certain maximum time out. The reason could be because of bad
          * network connection or  host crashed.
          */
-        ENET_EVENT_TYPE_DISCONNECT_TIMEOUT = 4,
+        ENET_EVENT_TYPE_DISCONNECT_TIMEOUT = 4
     } ENetEventType;
 
     /**
@@ -3035,11 +3035,11 @@ extern "C" {
                 if (channel != NULL) {
                     if (windowWrap) {
                         continue;
-                    } else if (outgoingCommand->sendAttempts < 1 && 
+                    } else if (outgoingCommand->sendAttempts < 1 &&
                             !(outgoingCommand->reliableSequenceNumber % ENET_PEER_RELIABLE_WINDOW_SIZE) &&
                             (channel->reliableWindows [(reliableWindow + ENET_PEER_RELIABLE_WINDOWS - 1) % ENET_PEER_RELIABLE_WINDOWS] >= ENET_PEER_RELIABLE_WINDOW_SIZE ||
-                            channel->usedReliableWindows & ((((1u << (ENET_PEER_FREE_RELIABLE_WINDOWS + 2)) - 1) << reliableWindow) | 
-                            (((1u << (ENET_PEER_FREE_RELIABLE_WINDOWS + 2)) - 1) >> (ENET_PEER_RELIABLE_WINDOWS - reliableWindow))))) 
+                            channel->usedReliableWindows & ((((1u << (ENET_PEER_FREE_RELIABLE_WINDOWS + 2)) - 1) << reliableWindow) |
+                            (((1u << (ENET_PEER_FREE_RELIABLE_WINDOWS + 2)) - 1) >> (ENET_PEER_RELIABLE_WINDOWS - reliableWindow)))))
                     {
                         windowWrap = 1;
                         currentSendReliableCommand = enet_list_end (& peer->outgoingSendReliableCommands);
@@ -3176,7 +3176,7 @@ extern "C" {
 
     static int enet_protocol_send_outgoing_commands(ENetHost *host, ENetEvent *event, int checkForTimeouts) {
         enet_uint8 headerData[
-            sizeof(ENetProtocolHeader) 
+            sizeof(ENetProtocolHeader)
 #ifdef ENET_USE_MORE_PEERS
             + sizeof(enet_uint8) // additional peer id byte
 #endif
@@ -5199,13 +5199,13 @@ extern "C" {
             // Set the value of the start_time_ns, such that the first timestamp
             // is at 1ms. This ensures 0 remains a special value.
             uint64_t want_value = current_time_ns - 1 * ns_in_ms;
-            // In-function diagnostic pragmas and -Wpedantic need gcc >= 4.8.
-            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8))) // Ignore warning.
+            // In-function diagnostic pragmas and -Wpedantic need gcc >= 4.6.
+            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))) // Ignore warning.
             #pragma GCC diagnostic push
             #pragma GCC diagnostic ignored "-Wpedantic"
             #endif
             uint64_t old_value = ENET_ATOMIC_CAS(&start_time_ns, 0, want_value);
-            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 8)))
+            #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)))
             #pragma GCC diagnostic pop
             #endif
             offset_ns = old_value == 0 ? want_value : old_value;
